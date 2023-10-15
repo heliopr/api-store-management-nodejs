@@ -1,4 +1,4 @@
-# API for Products
+# API for Store Management
 
 # Built with
 * NodeJS
