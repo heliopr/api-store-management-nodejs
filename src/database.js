@@ -15,6 +15,7 @@ database.connect = async function () {
             port: port,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_DATABASE,
+            trace: true,
             connectionLimit: 5
         })
         console.log("[DB] Connected to MariaDB database!")
@@ -50,25 +51,33 @@ database.setupTables = async function() {
             contact VARCHAR(100) NOT NULL,
 
             CONSTRAINT fk_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
         )`)
 
         await database.connection.query(`CREATE TABLE IF NOT EXISTS products(
             id SMALLINT UNSIGNED AUTO_INCREMENT,
             name VARCHAR(100) NOT NULL UNIQUE,
             price DECIMAL(15, 2) UNSIGNED,
-            amount SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+            quantity SMALLINT UNSIGNED NOT NULL DEFAULT 0,
             category_id TINYINT UNSIGNED,
 
             CONSTRAINT pk_products PRIMARY KEY (id),
             CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES product_categories(id)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
         )`)
 
         await database.connection.query(`CREATE TABLE IF NOT EXISTS product_supplier(
             product_id SMALLINT UNSIGNED NOT NULL,
             supplier_id SMALLINT UNSIGNED NOT NULL,
 
-            CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id),
+            CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
             CONSTRAINT fk_product_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
         )`)
 
         await database.connection.query(`CREATE TABLE IF NOT EXISTS employees(
@@ -85,10 +94,24 @@ database.setupTables = async function() {
             id SMALLINT UNSIGNED AUTO_INCREMENT,
             total DECIMAL(15, 2) NOT NULL,
             datetime DATETIME NOT NULL,
-            employee_id TINYINT UNSIGNED NOT NULL,
+            employee_id TINYINT UNSIGNED,
 
             CONSTRAINT pk_sales PRIMARY KEY (id),
             CONSTRAINT fk_employee FOREIGN KEY (employee_id) REFERENCES employees(id)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
+        )`)
+
+        await database.connection.query(`CREATE TABLE IF NOT EXISTS product_sale(
+            sale_id SMALLINT UNSIGNED NOT NULL,
+            product_id SMALLINT UNSIGNED NOT NULL,
+
+            CONSTRAINT fk_sale FOREIGN KEY (sale_id) REFERENCES sales(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+            CONSTRAINT fk_product_sale FOREIGN KEY (product_id) REFERENCES products(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
         )`)
 
         console.log("[DB] Successfully set up tables")

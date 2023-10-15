@@ -2,15 +2,16 @@ require("dotenv").config()
 const express = require("express")
 const fs = require("fs")
 const database = require("./database")
+const productManager = require("./managers/productManager")
 
 const app = express()
 let httpServer
 
-function registerRoutes(path) {
+function useRoutes(path) {
     fs.readdirSync("./src/routes" + path).forEach(f => {
         full = "./src/routes" + path + f
         if (fs.lstatSync(full).isDirectory()) {
-            registerRoutes(path + f + "/")
+            useRoutes(path + f + "/")
         }
         else {
             const router = require("./routes" + path + f)
@@ -33,7 +34,7 @@ async function exit(server) {
     if (!await database.connect()) return
     if (!await database.setupTables()) return
 
-    registerRoutes("/")
+    useRoutes("/")
 
     httpServer = app.listen(process.env.PORT, () => {
         console.log("Listening to port " + process.env.PORT)
@@ -41,4 +42,10 @@ async function exit(server) {
 
     process.on("SIGINT", exit)
     process.on("SIGTERM", exit)
+
+    await productManager.insertProduct("coca", 15, 10)
+    console.log(await productManager.countAllProducts())
+
+    /*console.log(await productManager.getProductBy("name", "coca"))
+    console.log(await productManager.getProductBy("name", "cocac"))*/
 })()
