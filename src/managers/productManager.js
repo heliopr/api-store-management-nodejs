@@ -2,7 +2,7 @@ const database = require("../database")
 
 const productManager = {}
 
-productManager.insertProduct = async function(name, price, quantity, category=null) {
+productManager.createProduct = async function(name, price, quantity, category=null) {
     try {
         const result = await database.connection.query("INSERT INTO products (name, price, quantity, category_id) VALUES (?, ?, ?, ?) RETURNING *", [name, price, quantity, category])
         return [result[0], null]
@@ -30,16 +30,21 @@ productManager.getProductBy = async function(column, value) {
     }
 }
 
-productManager.setColumn = async function(column, newValue, returning=false) {
+productManager.getAllProducts = async function() {
     try {
-        if (returning) {
-            const result = await database.connection.query(`UPDATE products SET ${column} = ? RETURNING *`, [newValue])
-            return [result[0], null]
-        }
-        else {
-            const result = await database.connection.query(`UPDATE products SET ${column} = ?`, [newValue])
-            return [result, null]
-        }
+        const result = await database.connection.query("SELECT * FROM products")
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+productManager.updateProduct = async function(product) {
+    try {
+        const result = await database.connection.query("UPDATE products SET name = ?, price = ?, quantity = ?, category_id = ? WHERE id = ?", 
+            [product.name, product.price, product.quantity, product.category_id, product.id])
+        return [result, null]
     }
     catch (e) {
         return [null, e]

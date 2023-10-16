@@ -105,6 +105,7 @@ database.setupTables = async function() {
         await database.connection.query(`CREATE TABLE IF NOT EXISTS product_sale(
             sale_id SMALLINT UNSIGNED NOT NULL,
             product_id SMALLINT UNSIGNED NOT NULL,
+            quantity  SMALLINT UNSIGNED NOT NULL,
 
             CONSTRAINT fk_sale FOREIGN KEY (sale_id) REFERENCES sales(id)
                 ON DELETE CASCADE

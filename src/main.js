@@ -3,6 +3,7 @@ const express = require("express")
 const fs = require("fs")
 const database = require("./database")
 const productManager = require("./managers/productManager")
+const categoryManager = require("./managers/categoryManager")
 
 const app = express()
 let httpServer
@@ -15,7 +16,7 @@ function useRoutes(path) {
         }
         else {
             const router = require("./routes" + path + f)
-            app.use("/", router)
+            app.use(router)
         }
     })
 }
@@ -43,9 +44,27 @@ async function exit(server) {
     process.on("SIGINT", exit)
     process.on("SIGTERM", exit)
 
-    await productManager.insertProduct("coca", 15, 10)
+
+    // TESTING
+
+    /*
+    console.log(await categoryManager.getAllCategories())
+    console.log(await categoryManager.deleteCategory(1))
+    console.log(await categoryManager.getAllCategories())
+
+    console.log(await categoryManager.getAllCategories())
+    console.log(await categoryManager.createCategory("Refrigerantes"))
+    console.log(await categoryManager.getAllCategories())
+
+    console.log(await productManager.getAllProducts())
+    console.log(await productManager.insertProduct("pepsi", 2, 3, 1))
+    console.log(await productManager.getAllProducts())
+
+    console.log(await productManager.getAllProducts())
+    console.log(await productManager.insertProduct("coca", 15, 10))
+    console.log(await productManager.getAllProducts())
     console.log(await productManager.countAllProducts())
 
-    /*console.log(await productManager.getProductBy("name", "coca"))
+    console.log(await productManager.getProductBy("name", "coca"))
     console.log(await productManager.getProductBy("name", "cocac"))*/
 })()
