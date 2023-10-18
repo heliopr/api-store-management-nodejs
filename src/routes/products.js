@@ -5,6 +5,7 @@ const categoryManager = require("../managers/categoryManager")
 
 const router = Router()
 
+
 router.get("/products", async (req, res) => {
     try {
         const [result, error] = await productManager.getAllProducts()
@@ -21,9 +22,10 @@ router.get("/products", async (req, res) => {
 })
 
 
+
 router.get("/products/:id", async (req, res) => {
     try {
-        let id = parseInt(req.params["id"])
+        const id = parseInt(req.params["id"])
         if (isNaN(id)) {
             return res.status(400).json({ message: "Invalid parameter 'id'" })
         }
@@ -40,6 +42,7 @@ router.get("/products/:id", async (req, res) => {
         res.status(400).json({ message: "Error" })
     }
 })
+
 
 
 router.post("/products", bodyParser.json(), async (req, res) => {
@@ -75,6 +78,16 @@ router.post("/products", bodyParser.json(), async (req, res) => {
             }
         }
 
+        if (category_id != null) {
+            const [category, error] = await categoryManager.getCategoryById(category_id)
+            if (error) {
+                return res.status(400).json({ message: "An error occurred in the database" })
+            }
+            else if (category == null || category == undefined) {
+                return res.status(400).json({ message: "Category not found" })
+            }
+        }
+
 
         const [product, error] = await productManager.createProduct(name, price, quantity, category_id)
         if (error) {
@@ -88,6 +101,7 @@ router.post("/products", bodyParser.json(), async (req, res) => {
         res.status(400).json({ message: "Error" })
     }
 })
+
 
 
 router.delete("/products/:id", async (req, res) => {
@@ -120,6 +134,7 @@ router.delete("/products/:id", async (req, res) => {
         res.status(400).json({ message: "Error" })
     }
 })
+
 
 
 router.put("/products/:id", bodyParser.json(), async (req, res) => {
