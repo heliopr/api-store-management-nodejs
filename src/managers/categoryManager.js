@@ -24,7 +24,7 @@ categoryManager.getAllCategories = async function () {
 
 categoryManager.getCategoryByName = async function (name) {
     try {
-        const result = await database.connection.query("SELECT * FROM product_categories WHERE name = ?", [name])
+        const result = await database.connection.query("SELECT * FROM product_categories WHERE name = ? LIMIT 1", [name])
         return [result[0], null]
     }
     catch (e) {
@@ -34,7 +34,7 @@ categoryManager.getCategoryByName = async function (name) {
 
 categoryManager.getCategoryById = async function (id) {
     try {
-        const result = await database.connection.query("SELECT * FROM product_categories WHERE id = ?", [id])
+        const result = await database.connection.query("SELECT * FROM product_categories WHERE id = ? LIMIT 1", [id])
         return [result[0], null]
     }
     catch (e) {
@@ -44,7 +44,7 @@ categoryManager.getCategoryById = async function (id) {
 
 categoryManager.setName = async function (id, newName) {
     try {
-        const result = await database.connection.query("UPDATE product_categories SET name = ? WHERE id = ?", [newName, id])
+        const result = await database.connection.query("UPDATE product_categories SET name = ? WHERE id = ? LIMIT 1", [newName, id])
         return [result, null]
     }
     catch (e) {

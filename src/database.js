@@ -58,7 +58,7 @@ database.setupTables = async function() {
         await database.connection.query(`CREATE TABLE IF NOT EXISTS products(
             id SMALLINT UNSIGNED AUTO_INCREMENT,
             name VARCHAR(100) NOT NULL UNIQUE,
-            price DECIMAL(15, 2) UNSIGNED,
+            price FLOAT UNSIGNED,
             quantity SMALLINT UNSIGNED NOT NULL DEFAULT 0,
             category_id TINYINT UNSIGNED,
 
@@ -92,7 +92,7 @@ database.setupTables = async function() {
 
         await database.connection.query(`CREATE TABLE IF NOT EXISTS sales(
             id SMALLINT UNSIGNED AUTO_INCREMENT,
-            total DECIMAL(15, 2) NOT NULL,
+            total FLOAT UNSIGNED NOT NULL,
             datetime DATETIME NOT NULL,
             employee_id TINYINT UNSIGNED,
 

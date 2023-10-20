@@ -22,7 +22,7 @@ productManager.getProductByName = function(name) {
 
 productManager.getProductBy = async function(column, value) {
     try {
-        const result = await database.connection.query(`SELECT * FROM products WHERE ${column} = ?`, [value])
+        const result = await database.connection.query(`SELECT * FROM products WHERE ${column} = ? LIMIT 1`, [value])
         return [result[0], null]
     }
     catch (e) {
@@ -42,7 +42,7 @@ productManager.getAllProducts = async function() {
 
 productManager.updateProduct = async function(product) {
     try {
-        const result = await database.connection.query("UPDATE products SET name = ?, price = ?, quantity = ?, category_id = ? WHERE id = ?", 
+        const result = await database.connection.query("UPDATE products SET name = ?, price = ?, quantity = ?, category_id = ? WHERE id = ? LIMIT 1", 
             [product.name, product.price, product.quantity, product.category_id, product.id])
         return [result, null]
     }
