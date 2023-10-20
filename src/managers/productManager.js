@@ -32,7 +32,7 @@ productManager.getProductBy = async function(column, value) {
 
 productManager.getAllProducts = async function() {
     try {
-        const result = await database.connection.query("SELECT * FROM products")
+        const result = await database.connection.query("SELECT * FROM products ORDER BY id")
         return [result, null]
     }
     catch (e) {
@@ -53,7 +53,7 @@ productManager.updateProduct = async function(product) {
 
 productManager.deleteProduct = async function(id) {
     try {
-        const result = await database.connection.query("DELETE FROM products WHERE id = ?", [id])
+        const result = await database.connection.query("DELETE FROM products WHERE id = ? LIMIT 1", [id])
         return [result, null]
     }
     catch (e) {
@@ -67,7 +67,7 @@ productManager.countAllProducts = async function() {
         return [result[0]["count"], null]
     }
     catch (e) {
-        return [null, e]
+        return [0, e]
     }
 }
 

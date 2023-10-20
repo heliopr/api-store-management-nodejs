@@ -4,6 +4,24 @@ const categoryManager = require("../managers/categoryManager")
 
 const router = Router()
 
+
+router.get("/categories/count", async (req, res) => {
+    try {
+        const [count, error] = await categoryManager.countAllCategories()
+        
+        if (error) {
+            return res.status(400).json({ message: "An error occurred in the database" })
+        }
+
+        res.status(200).json({count: Number(count)})
+    }
+    catch (e) {
+        console.log(e)
+        res.status(400).json({ message: "Error" })
+    }
+})
+
+
 router.get("/categories", async (req, res) => {
     try {
         const [result, error] = await categoryManager.getAllCategories()
