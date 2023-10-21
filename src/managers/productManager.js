@@ -71,4 +71,48 @@ productManager.countAllProducts = async function() {
     }
 }
 
+
+productManager.getSuppliers = async function(id) {
+    try {
+        const result = await database.connection.query("SELECT supplier_id FROM product_supplier WHERE product_id = ? ORDER BY supplier_id", [id])
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+
+productManager.addSupplier = async function(id, supplierId) {
+    try {
+        const result = await database.connection.query("INSERT INTO product_supplier VALUES (?, ?)", [id, supplierId])
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+
+productManager.hasSupplier = async function(id, supplierId) {
+    try {
+        const result = await database.connection.query("SELECT * FROM product_supplier WHERE product_id = ? AND supplier_id = ? LIMIT 1", [id, supplierId])
+        return [result[0] != undefined, null]
+    }
+    catch (e) {
+        return [false, e]
+    }
+}
+
+
+productManager.removeSupplier = async function(id, supplierId) {
+    try {
+        const result = await database.connection.query("DELETE FROM product_supplier WHERE product_id = ? AND supplier_id = ? LIMIT 1", [id, supplierId])
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
 module.exports = productManager

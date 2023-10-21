@@ -60,7 +60,6 @@ router.get("/products/:id", async (req, res) => {
 })
 
 
-
 router.post("/products", bodyParser.json(), async (req, res) => {
     try {
         let { name, price, quantity, category_id } = req.body

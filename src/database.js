@@ -48,7 +48,7 @@ database.setupTables = async function() {
         await database.connection.query(`CREATE TABLE IF NOT EXISTS supplier_contacts(
             supplier_id SMALLINT UNSIGNED NOT NULL,
             type ENUM('email', 'phone_number') NOT NULL,
-            contact VARCHAR(100) NOT NULL,
+            contact VARCHAR(100) NOT NULL UNIQUE,
 
             CONSTRAINT fk_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
                 ON DELETE CASCADE
@@ -72,6 +72,7 @@ database.setupTables = async function() {
             product_id SMALLINT UNSIGNED NOT NULL,
             supplier_id SMALLINT UNSIGNED NOT NULL,
 
+            CONSTRAINT unique_product_supplier UNIQUE (product_id, supplier_id),
             CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(id)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE,
@@ -85,7 +86,7 @@ database.setupTables = async function() {
             name VARCHAR(100) NOT NULL UNIQUE,
             phone_number VARCHAR(14) NOT NULL UNIQUE,
             hire_date DATE NOT NULL,
-            salary DECIMAL(15, 2),
+            salary FLOAT UNSIGNED,
 
             CONSTRAINT pk_employees PRIMARY KEY (id)
         )`)
@@ -107,6 +108,7 @@ database.setupTables = async function() {
             product_id SMALLINT UNSIGNED NOT NULL,
             quantity  SMALLINT UNSIGNED NOT NULL,
 
+            CONSTRAINT unique_sale_product UNIQUE (sale_id, product_id),
             CONSTRAINT fk_sale FOREIGN KEY (sale_id) REFERENCES sales(id)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE,
