@@ -1,26 +1,9 @@
 const bodyParser = require("body-parser")
 const { Router } = require("express")
-const productManager = require("../managers/productManager")
-const categoryManager = require("../managers/categoryManager")
+const productManager = require("../../managers/productManager")
+const categoryManager = require("../../managers/categoryManager")
 
 const router = Router()
-
-
-router.get("/products/count", async (req, res) => {
-    try {
-        const [count, error] = await productManager.countAllProducts()
-        
-        if (error) {
-            return res.status(400).json({ message: "An error occurred in the database" })
-        }
-
-        res.status(200).json({count: Number(count)})
-    }
-    catch (e) {
-        console.log(e)
-        res.status(400).json({ message: "Error" })
-    }
-})
 
 
 router.get("/products", async (req, res) => {
@@ -38,6 +21,22 @@ router.get("/products", async (req, res) => {
     }
 })
 
+
+router.get("/products/count", async (req, res) => {
+    try {
+        const [count, error] = await productManager.countAllProducts()
+        
+        if (error) {
+            return res.status(400).json({ message: "An error occurred in the database" })
+        }
+
+        res.status(200).json({count: Number(count)})
+    }
+    catch (e) {
+        console.log(e)
+        res.status(400).json({ message: "Error" })
+    }
+})
 
 
 router.get("/products/:id", async (req, res) => {

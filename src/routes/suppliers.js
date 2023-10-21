@@ -1,13 +1,12 @@
 const bodyParser = require("body-parser")
 const { Router } = require("express")
-const categoryManager = require("../managers/categoryManager")
+const supplierManager = require("../managers/supplierManager")
 
 const router = Router()
 
-
-router.get("/categories", async (req, res) => {
+router.get("/suppliers", async (req, res) => {
     try {
-        const [result, error] = await categoryManager.getAllCategories()
+        const [result, error] = await supplierManager.getAllSuppliers()
         if (error) {
             return res.status(400).json({ message: "An error occurred in the database" })
         }
@@ -21,15 +20,16 @@ router.get("/categories", async (req, res) => {
 })
 
 
-router.get("/categories/count", async (req, res) => {
+
+router.get("/suppliers/count", async (req, res) => {
     try {
-        const [count, error] = await categoryManager.countAllCategories()
-        
+        const [count, error] = await supplierManager.countAllSuppliers()
+
         if (error) {
             return res.status(400).json({ message: "An error occurred in the database" })
         }
 
-        res.status(200).json({count: Number(count)})
+        res.status(200).json({ count: Number(count) })
     }
     catch (e) {
         console.log(e)
@@ -38,19 +38,20 @@ router.get("/categories/count", async (req, res) => {
 })
 
 
-router.get("/categories/:id", async (req, res) => {
+
+router.get("/suppliers/:id", async (req, res) => {
     try {
         const id = parseInt(req.params["id"])
         if (isNaN(id)) {
             return res.status(400).json({ message: "Invalid parameter 'id'" })
         }
 
-        const [category, error] = await categoryManager.getCategoryById(id)
+        const [supplier, error] = await supplierManager.getSupplierById(id)
         if (error) {
             return res.status(400).json({ message: "An error occurred in the database" })
         }
 
-        res.status(200).json(category || {})
+        res.status(200).json(supplier || {})
     }
     catch (e) {
         console.log(e)
@@ -60,7 +61,7 @@ router.get("/categories/:id", async (req, res) => {
 
 
 
-router.post("/categories", bodyParser.json(), async (req, res) => {
+router.post("/suppliers", bodyParser.json(), async (req, res) => {
     try {
         const name = req.body["name"]
 
@@ -70,22 +71,22 @@ router.post("/categories", bodyParser.json(), async (req, res) => {
 
 
         {
-            const [category, error] = await categoryManager.getCategoryByName(name)
+            const [supplier, error] = await supplierManager.getSupplierByName(name)
             if (error) {
                 return res.status(400).json({ message: "An error occurred in the database" })
             }
-            else if (category != null && category != undefined) {
+            else if (supplier != null && supplier != undefined) {
                 return res.status(400).json({ message: "Name is already in use" })
             }
         }
 
 
-        const [category, error] = await categoryManager.createCategory(name)
+        const [supplier, error] = await supplierManager.createSupplier(name)
         if (error) {
             return res.status(400).json({ message: "An error occurred in the database" })
         }
 
-        res.status(200).json(category || {})
+        res.status(200).json(supplier || {})
     }
     catch (e) {
         console.log(e)
@@ -95,7 +96,7 @@ router.post("/categories", bodyParser.json(), async (req, res) => {
 
 
 
-router.delete("/categories/:id", async (req, res) => {
+router.delete("/suppliers/:id", async (req, res) => {
     try {
         const id = parseInt(req.params["id"])
 
@@ -105,22 +106,22 @@ router.delete("/categories/:id", async (req, res) => {
 
 
         {
-            const [category, error] = await categoryManager.getCategoryById(id)
+            const [supplier, error] = await supplierManager.getSupplierById(id)
             if (error) {
                 return res.status(400).json({ message: "An error occcurred in the database" })
             }
-            else if (category == null || category == undefined) {
-                return res.status(400).json({ message: "Category not found" })
+            else if (supplier == null || supplier == undefined) {
+                return res.status(400).json({ message: "Supplier not found" })
             }
         }
 
 
-        const [result, error] = await categoryManager.deleteCategory(id)
+        const [result, error] = await supplierManager.deleteSupplier(id)
         if (error) {
             return res.status(400).json({ message: "An error occurred in the database" })
         }
 
-        res.status(200).json({ message: "Category deleted" })
+        res.status(200).json({ message: "Supplier deleted" })
     }
     catch (e) {
         console.log(e)
@@ -130,7 +131,7 @@ router.delete("/categories/:id", async (req, res) => {
 
 
 
-router.put("/categories/:id", bodyParser.json(), async (req, res) => {
+router.put("/suppliers/:id", bodyParser.json(), async (req, res) => {
     try {
         const id = parseInt(req.params["id"])
         const name = req.body["name"]
@@ -145,29 +146,29 @@ router.put("/categories/:id", bodyParser.json(), async (req, res) => {
 
 
         {
-            const [category, error] = await categoryManager.getCategoryById(id)
+            const [supplier, error] = await supplierManager.getSupplierById(id)
             if (error) {
                 return res.status(400).json({ message: "An error occurred in the database" })
             }
-            else if (category == null || category == undefined) {
-                return res.status(400).json({ message: "Category not found" })
+            else if (supplier == null || supplier == undefined) {
+                return res.status(400).json({ message: "Supplier not found" })
             }
         }
 
 
         {
-            const [category, error] = await categoryManager.getCategoryByName(name)
+            const [supplier, error] = await supplierManager.getSupplierByName(name)
             if (error) {
                 return res.status(400).json({ message: "An error occurred in the database" })
             }
-            else if (category != null && category != undefined && category.id != id) {
+            else if (supplier != null && supplier != undefined && supplier.id != id) {
                 return res.status(400).json({ message: "Name is already in use" })
             }
         }
 
 
 
-        const [result, error] = await categoryManager.setName(id, name)
+        const [result, error] = await supplierManager.setName(id, name)
         if (error) {
             return res.status(400).json({ message: "An error occurred in the database" })
         }
