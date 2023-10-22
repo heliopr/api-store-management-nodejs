@@ -89,5 +89,45 @@ supplierManager.getProducts = async function (id) {
     }
 }
 
+supplierManager.getContacts = async function(id) {
+    try {
+        const result = await database.connection.query("SELECT contact,type FROM supplier_contacts WHERE supplier_id = ?", [id])
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+supplierManager.createContact = async function(id, type, contact) {
+    try {
+        const result = await database.connection.query("INSERT INTO supplier_contacts VALUES (?, ?, ?) RETURNING *", [id, type, contact])
+        return [result[0], null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+supplierManager.getContactOwner = async function(contact) {
+    try {
+        const result = await database.connection.query("SELECT supplier_id FROM supplier_contacts WHERE contact = ? LIMIT 1", [contact])
+        return [result[0], null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+supplierManager.deleteContact = async function(id, contact) {
+    try {
+        const result = await database.connection.query("DELETE FROM supplier_contacts WHERE supplier_id = ? AND contact = ? LIMIT 1", [id, contact])
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
 
 module.exports = supplierManager
