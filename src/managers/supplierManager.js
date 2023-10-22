@@ -3,7 +3,7 @@ const database = require("../database")
 const supplierManager = {}
 
 
-supplierManager.getAllSuppliers = async function() {
+supplierManager.getAllSuppliers = async function () {
     try {
         const result = await database.connection.query("SELECT * FROM suppliers ORDER BY id")
         return [result, null]
@@ -14,7 +14,7 @@ supplierManager.getAllSuppliers = async function() {
 }
 
 
-supplierManager.countAllSuppliers = async function() {
+supplierManager.countAllSuppliers = async function () {
     try {
         const result = await database.connection.query("SELECT COUNT(id) AS count FROM suppliers")
         return [result[0]["count"], null]
@@ -25,7 +25,7 @@ supplierManager.countAllSuppliers = async function() {
 }
 
 
-supplierManager.getSupplierById = async function(id) {
+supplierManager.getSupplierById = async function (id) {
     try {
         const result = await database.connection.query("SELECT * FROM suppliers WHERE id = ? LIMIT 1", [id])
         return [result[0], null]
@@ -36,7 +36,7 @@ supplierManager.getSupplierById = async function(id) {
 }
 
 
-supplierManager.getSupplierByName = async function(name) {
+supplierManager.getSupplierByName = async function (name) {
     try {
         const result = await database.connection.query("SELECT * FROM suppliers WHERE name = ? LIMIT 1", [name])
         return [result[0], null]
@@ -47,7 +47,7 @@ supplierManager.getSupplierByName = async function(name) {
 }
 
 
-supplierManager.createSupplier = async function(name) {
+supplierManager.createSupplier = async function (name) {
     try {
         const result = await database.connection.query("INSERT INTO suppliers (name) VALUES (?) RETURNING *", [name])
         return [result[0], null]
@@ -58,7 +58,7 @@ supplierManager.createSupplier = async function(name) {
 }
 
 
-supplierManager.deleteSupplier = async function(id) {
+supplierManager.deleteSupplier = async function (id) {
     try {
         const result = await database.connection.query("DELETE FROM suppliers WHERE id = ? LIMIT 1", [id])
         return [result, null]
@@ -69,9 +69,19 @@ supplierManager.deleteSupplier = async function(id) {
 }
 
 
-supplierManager.setName = async function(id, newName) {
+supplierManager.setName = async function (id, newName) {
     try {
         const result = await database.connection.query("UPDATE suppliers SET name = ? WHERE id = ? LIMIT 1", [newName, id])
+        return [result, null]
+    }
+    catch (e) {
+        return [null, e]
+    }
+}
+
+supplierManager.getProducts = async function (id) {
+    try {
+        const result = await database.connection.query("SELECT product_id FROM product_supplier WHERE supplier_id = ?", [id])
         return [result, null]
     }
     catch (e) {

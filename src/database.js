@@ -81,7 +81,7 @@ database.setupTables = async function() {
                 ON UPDATE CASCADE
         )`)
 
-        await database.connection.query(`CREATE TABLE IF NOT EXISTS employees(
+        /*await database.connection.query(`CREATE TABLE IF NOT EXISTS employees(
             id TINYINT UNSIGNED AUTO_INCREMENT,
             name VARCHAR(100) NOT NULL UNIQUE,
             phone_number VARCHAR(14) NOT NULL UNIQUE,
@@ -115,7 +115,7 @@ database.setupTables = async function() {
             CONSTRAINT fk_product_sale FOREIGN KEY (product_id) REFERENCES products(id)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-        )`)
+        )`)*/
 
         console.log("[DB] Successfully set up tables")
         return true

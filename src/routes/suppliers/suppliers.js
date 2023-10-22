@@ -1,6 +1,6 @@
 const bodyParser = require("body-parser")
 const { Router } = require("express")
-const supplierManager = require("../managers/supplierManager")
+const supplierManager = require("../../managers/supplierManager")
 
 const router = Router()
 
